@@ -1,33 +1,41 @@
-/* Codigo javascript gestionar una lista de tareas 
-1. El usuario debe poder ingresar tareas.
-2. El usuario debe poder marcar tareas como completadas al hacer click en ellas.
-3. El usuario debe poder marcar tareas como no completadas al hacer click en ellas cuando estan completadas 
-(por defecto las tareas agregadas están no completadas).
-4. El usuario debe poder ver la lista de tareas.
-*/
-
 let listaTareas = [];
 
-//Función para agregar una tarea a la lista
+// Función para agregar una tarea a la lista
 function agregarTarea() {
-    let tarea = document.getElementById("inputTarea").value;
+    let tareaTexto = document.getElementById("inputTarea").value.trim();
+    if (tareaTexto === "") {
+        alert("Por favor, ingrese una tarea válida.");
+        return;
+    }
+    
+    let tarea = {
+        texto: tareaTexto,
+        completada: false
+    };
     listaTareas.push(tarea);
     document.getElementById("inputTarea").value = "";
     mostrarTareas();
 }
 
-//Función para mostrar la lista de tareas
+// Función para mostrar la lista de tareas
 function mostrarTareas() {
     let lista = document.getElementById("listaTareas");
     lista.innerHTML = "";
-    for(let i = 0; i <listaTareas.length; i++){
-    let item = document.createElement("li");
-    item.innerText = listaTareas[i];
-    lista.appendChild(item)}
-    }
+    
+    listaTareas.forEach((tarea, index) => {
+        let item = document.createElement("li");
+        item.innerText = tarea.texto;
+        item.style.textDecoration = tarea.completada ? "line-through" : "none";
+        item.addEventListener("click", () => marcarTarea(index));
+        lista.appendChild(item);
+    });
+}
 
+// Función para marcar o desmarcar tareas
+function marcarTarea(index) {
+    listaTareas[index].completada = !listaTareas[index].completada;
+    mostrarTareas();
+}
 
-
-
-//Agregar el evento click al botón
+// Agregar el evento click al botón
 document.getElementById("btnAgregarTarea").addEventListener("click", agregarTarea);
